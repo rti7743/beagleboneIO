@@ -12,8 +12,9 @@ void pinMode(const PIN pin, unsigned int value) {
   gpio = atoi(pair->value);
 
   if (value == INPUT) {
-    // mux mode 0x27
-    gpio_mux(&pin,  (_MUX_0 | _MUX_1 | _MUX_2 | _MUX_RECEIVER_ENABLE));
+ //   // mux mode 0x27
+ //   gpio_mux(&pin,  (_MUX_0 | _MUX_1 | _MUX_2 | _MUX_RECEIVER_ENABLE));
+    gpio_mux(&pin,  0x37);
   }
   else {
     // mux mode 0x7
@@ -45,7 +46,7 @@ unsigned digitalRead(const PIN pin) {
   
   gpio_read_value(gpio, &value);
 
-  return value;
+  return value ? 0 : 1;
 }
 
 unsigned analogRead(const unsigned pin) {

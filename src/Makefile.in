@@ -36,7 +36,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = pwm_clock$(EXEEXT) digitalWrite$(EXEEXT) \
+bin_PROGRAMS = pwm_clock$(EXEEXT) digitalWrite$(EXEEXT) digitalRead$(EXEEXT) \
 	analogRead$(EXEEXT) pinMux$(EXEEXT)
 subdir = src
 DIST_COMMON = $(include_HEADERS) $(srcdir)/Makefile.am \
@@ -89,6 +89,9 @@ analogRead_DEPENDENCIES = libbeagleboneio.la
 am_digitalWrite_OBJECTS = digitalWrite.$(OBJEXT) util.$(OBJEXT)
 digitalWrite_OBJECTS = $(am_digitalWrite_OBJECTS)
 digitalWrite_DEPENDENCIES = libbeagleboneio.la
+am_digitalRead_OBJECTS = digitalRead.$(OBJEXT) util.$(OBJEXT)
+digitalRead_OBJECTS = $(am_digitalRead_OBJECTS)
+digitalRead_DEPENDENCIES = libbeagleboneio.la
 am_pinMux_OBJECTS = pinMux.$(OBJEXT) util.$(OBJEXT)
 pinMux_OBJECTS = $(am_pinMux_OBJECTS)
 pinMux_DEPENDENCIES = libbeagleboneio.la
@@ -109,9 +112,9 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(libbeagleboneio_la_SOURCES) $(analogRead_SOURCES) \
-	$(digitalWrite_SOURCES) $(pinMux_SOURCES) $(pwm_clock_SOURCES)
+	$(digitalWrite_SOURCES) $(digitalRead_SOURCES) $(pinMux_SOURCES) $(pwm_clock_SOURCES)
 DIST_SOURCES = $(libbeagleboneio_la_SOURCES) $(analogRead_SOURCES) \
-	$(digitalWrite_SOURCES) $(pinMux_SOURCES) $(pwm_clock_SOURCES)
+	$(digitalWrite_SOURCES) $(digitalRead_SOURCES) $(pinMux_SOURCES) $(pwm_clock_SOURCES)
 HEADERS = $(include_HEADERS)
 ETAGS = etags
 CTAGS = ctags
@@ -234,6 +237,8 @@ top_srcdir = @top_srcdir@
 CLEANFILES = *~
 digitalWrite_SOURCES = digitalWrite.c util.c beagleutil.h
 digitalWrite_LDADD = libbeagleboneio.la
+digitalRead_SOURCES = digitalRead.c util.c beagleutil.h
+digitalRead_LDADD = libbeagleboneio.la
 analogRead_SOURCES = analogRead.c util.c beagleutil.h
 analogRead_LDADD = libbeagleboneio.la
 pinMux_SOURCES = pinMux.c util.c beagleutil.h
@@ -358,6 +363,9 @@ analogRead$(EXEEXT): $(analogRead_OBJECTS) $(analogRead_DEPENDENCIES) $(EXTRA_an
 digitalWrite$(EXEEXT): $(digitalWrite_OBJECTS) $(digitalWrite_DEPENDENCIES) $(EXTRA_digitalWrite_DEPENDENCIES) 
 	@rm -f digitalWrite$(EXEEXT)
 	$(LINK) $(digitalWrite_OBJECTS) $(digitalWrite_LDADD) $(LIBS)
+digitalRead$(EXEEXT): $(digitalRead_OBJECTS) $(digitalRead_DEPENDENCIES) $(EXTRA_digitalRead_DEPENDENCIES) 
+	@rm -f digitalRead$(EXEEXT)
+	$(LINK) $(digitalRead_OBJECTS) $(digitalRead_LDADD) $(LIBS)
 pinMux$(EXEEXT): $(pinMux_OBJECTS) $(pinMux_DEPENDENCIES) $(EXTRA_pinMux_DEPENDENCIES) 
 	@rm -f pinMux$(EXEEXT)
 	$(LINK) $(pinMux_OBJECTS) $(pinMux_LDADD) $(LIBS)
@@ -378,6 +386,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/beaglepwm.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/beagleuart.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/digitalWrite.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/digitalRead.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gpio.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pair.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pinMux.Po@am__quote@
