@@ -12,4 +12,10 @@
  */
 extern int delayMicro(useconds_t useconds);
 
+/**
+ * get microsencods.
+ */
+extern unsigned long micros();
+
+
 #endif /* _BEAGLEDELAY_H */

@@ -589,6 +589,7 @@
   * "gpio", "56", "led", "usr3", "mux", "gpmc_a8"
   */
 #define USR3 95
- 
+
+#define MAX_PINS 95
  
 #endif /* _PINS_H */

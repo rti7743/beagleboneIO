@@ -4,66 +4,55 @@
 #include <stdlib.h>
 #include <assert.h>
 
-void pinMode(const PIN pin, unsigned int value) {
-  unsigned gpio;
-  const Pair* pair;
-
-  pair  = get_pair_with_key(pin.def, pin.no, "gpio");
-  gpio = atoi(pair->value);
-
+void pinMode(unsigned pin, unsigned int value) {
   if (value == INPUT) {
  //   // mux mode 0x27
  //   gpio_mux(&pin,  (_MUX_0 | _MUX_1 | _MUX_2 | _MUX_RECEIVER_ENABLE));
-    gpio_mux(&pin,  0x37);
+    gpio_mux(pin,  0x37);
   }
   else {
     // mux mode 0x7
-    gpio_mux(&pin, (_MUX_0 | _MUX_1 | _MUX_2));
+    gpio_mux(pin, (_MUX_0 | _MUX_1 | _MUX_2));
   }
 
-  gpio_export(gpio);
-  gpio_set_direction(gpio, value);
+  gpio_export(pin);
+  gpio_set_direction(pin, value);
 
 }
 
-void digitalWrite(const PIN pin, unsigned int value) {
-  unsigned gpio;
-  const Pair* pair;
-  
-  pair = get_pair_with_key(pin.def, pin.no, "gpio");
-  gpio = atoi(pair->value);
-  gpio_write_value(gpio, value);
+void digitalWrite(unsigned pin, unsigned int value) {
+  gpio_write_value(pin, value);
 
 } 
 
-unsigned digitalRead(const PIN pin) {
-  unsigned gpio;
-  const Pair* pair;
+unsigned digitalRead(unsigned pin) {
+  return gpio_read_value(pin) ? 0 : 1;
+}
+
+unsigned analogRead(unsigned pin) {
+  char filename[128];
   unsigned value;
 
-  pair = get_pair_with_key(pin.def, pin.no, "gpio");
-  gpio = atoi(pair->value);
-  
-  gpio_read_value(gpio, &value);
-
-  return value ? 0 : 1;
-}
-
-unsigned analogRead(const unsigned pin) {
-  FILE *f;
-  char buf[128];
-    unsigned value;
-    snprintf(buf, sizeof(buf), "/sys/bus/platform/devices/tsc/ain%u", (pin + 1));
-  if ((f = fopen(buf, "r")) != NULL) {
-    fscanf(f, "%u", &value);
-    fclose(f);
-    return value;
+  snprintf(filename, sizeof(filename), "/sys/bus/platform/devices/tsc/ain%u", (pin + 1));
+  if ( ! fileoneline(filename,&value) ) {
+    perror("Cannot access analog pin");
+    assert(0);
+    return 0;
   }
-  perror("Cannot access analog pin");
-  assert(0);
+
+  return value;
 }
 
-void shiftOut(const PIN dataPin, const PIN clockPin, unsigned bitOrder, unsigned value) {
+unsigned analogWrite(unsigned pin,unsigned value) {
+  if (value == 0) {
+    return pwmRun(pin,0);
+  }
+  if (value > 255) value = 255;
+  return pwmOut(pin,490,value*100/255);
+}
+
+
+void shiftOut(unsigned dataPin, unsigned clockPin, unsigned bitOrder, unsigned value) {
   unsigned i;
   unsigned bit;
 

@@ -3,7 +3,6 @@
 #ifndef _GPIO_H
 #define _GPIO_H
 
-#include "beaglepair.h"
 #include "beaglepins.h"
 
 /** a HIGH value for a digital pin. 
@@ -55,17 +54,16 @@
  */
 typedef struct {
   /** name of the pin. */
-  char* name;
-  /** number of information pairs in the PIN struct */
-  int no;
-  /** information pairs.
-   * These contain information such as the pin name for muxing.
+  const char* name;
+  /** informations.
    */
-  Pair def[10];
+  unsigned       gpio;
+  const char*    mux;
+  unsigned       eeprom;
 } PIN;
 
 
-extern PIN pins[];
+extern const PIN pins[];
 
 /** export a pin. */
 extern void gpio_export(unsigned);
@@ -89,7 +87,7 @@ extern void gpio_write_value(unsigned pin, unsigned value);
  * @param pin the pin
  * @param value the returned value
  */
-extern void gpio_read_value(unsigned pin, unsigned *value);
+extern unsigned gpio_read_value(unsigned pin);
 
 /** set the edge for the pin.
  * @param pin the pin
@@ -121,7 +119,7 @@ extern void gpio_close_fd(int fd);
 /** print some debug stuff about the PIN structure
  *
  */
-extern void gpio_inspect(const PIN *pin);
+extern void gpio_inspect(unsigned pin);
 
 /** mux a pin.
  * You can pass any pin to this operation and the library looks up the name
@@ -130,6 +128,6 @@ extern void gpio_inspect(const PIN *pin);
  * @param pin the pin to be muxed
  * @param mux the new mux value
  */
-extern void gpio_mux(const PIN *, unsigned);
+extern void gpio_mux(unsigned pin, unsigned value);
 
 #endif

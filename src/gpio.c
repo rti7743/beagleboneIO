@@ -6,6 +6,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <stdlib.h>
+#include <beagleutil.h>
 
 static const char *gpioPath[] = {       // index
   "/sys/class/gpio/export",             // 0
@@ -16,81 +18,71 @@ static const char *gpioPath[] = {       // index
   "/sys/class/gpio/gpio%u/active_low",  // 5
 };
 
-void gpio_inspect(const PIN *pin) {
-  int i = 0;
+void gpio_inspect(unsigned pin) {
+  assert(pin < MAX_PINS);
 
-  printf("Name: %s\n", pin->name);
-  printf("\tno; %d\n", pin->no);
-  for (i = 0; i < pin->no; i++) {
-    printf("\t%s : %s\n",(pin->def[i]).key, (pin->def[i]).value);
-  }
+  printf("Name: %s\n", pins[pin].name);
+  printf("\tgpio:  %d\n", pins[pin].gpio);
+  printf("\tmux:   %s\n", pins[pin].mux);
+  printf("\eeprom: %d\n", pins[pin].eeprom);
 }
 
-void gpio_mux(const PIN *pin, unsigned value) {
-  FILE *f;
-  char buffer[128];
-  const Pair *omap_pair;
+void gpio_mux(unsigned pin, unsigned value) {
+  char filename[128];
 
-  if ((omap_pair = get_pair_with_key(pin->def, pin->no, "mux")) == NULL) {
-    assert(0);
-  }
-  sprintf(buffer, "/sys/kernel/debug/omap_mux/%s", omap_pair->value);
-  if ((f = fopen(buffer, "w")) == NULL) {
+  assert(pin < MAX_PINS);
+  assert(pins[pin].mux[0] != '\0');
+  sprintf(filename, "/sys/kernel/debug/omap_mux/%s", pins[pin].mux);
+  if (! fileechoX(filename,value) ) {
     perror("can't open pin for muxing");
     assert(0);
   }
-  fprintf(f, "%x", value);
-  fclose(f);
 }
 
-void gpio_export(unsigned gpio) {
-  FILE *pin;
+void gpio_export(unsigned pin) {
+  assert(pin < MAX_PINS);
 
-  if ( (pin  = fopen(gpioPath[0],"w")) != NULL) {
-    fprintf(pin, "%u", gpio);
-    fclose(pin);
-    return;
+  if (! fileecho(gpioPath[0],pins[pin].gpio) ) {
+    perror("failed to export pin");
+    assert(0);
   }
-  perror("failed to export pin");
-  assert(0);
 }
 
-void gpio_unexport(unsigned gpio) {
-  FILE *pin;
-  if ( (pin  = fopen(gpioPath[1],"w")) != NULL) {
-    fprintf(pin, "%u", gpio);
-    fclose(pin);
-    return;
+void gpio_unexport(unsigned pin) {
+  assert(pin < MAX_PINS);
+
+  if (! fileecho(gpioPath[1],pins[pin].gpio) ) {
+    perror("failed to unexport pin");
+    assert(0);
   }
-  perror("failed to unexport pin");
-  assert(0);
 }
 
-void gpio_set_direction(unsigned gpio, unsigned direction) {
-  FILE *pin;
-  char buf[128];
+void gpio_set_direction(unsigned pin, unsigned direction) {
+  char filename[128];
+  const char * writeString;
 
-  snprintf(buf, sizeof(buf), gpioPath[2], gpio);
-  if ((pin = fopen(buf, "w")) != NULL) {
-    switch (direction) {
-    case INPUT: fprintf(pin, "in");
+  assert(pin < MAX_PINS);
+  snprintf(filename, sizeof(filename), gpioPath[2], pins[pin].gpio);
+  switch (direction) {
+    case INPUT: writeString = "in";
       break;
-    case OUTPUT: fprintf(pin, "out");
+    case OUTPUT: writeString = "out";
       break;
     default:
       assert(0);
-    }
-    fclose(pin);
-    return;
   }
-  perror("Failed to set direction for pin");
-  assert(0);
+  if ( ! fileecho_str(filename, writeString) ) {
+    perror("Failed to set direction for pin");
+    assert(0);
+  }
+  return;
 }
 
-void gpio_write_value(unsigned gpio, unsigned value) {
+void gpio_write_value(unsigned pin, unsigned value) {
   int fd;
 
-  if ((fd = gpio_get_fd(gpio,O_WRONLY)) != -1) {
+  assert(pin < MAX_PINS);
+  if ((fd = gpio_get_fd(pin,O_WRONLY)) != -1) {
     if (value) {
       write(fd, "1", 2);
     }
@@ -104,57 +96,64 @@ void gpio_write_value(unsigned gpio, unsigned value) {
   assert(0);
 }
 
-void gpio_read_value(unsigned gpio, unsigned *value) {
-  FILE *pin;
+unsigned gpio_read_value(unsigned pin) {
+  int fd;
+  int readSize;
   char buf[128];
 
-  snprintf(buf, sizeof(buf),gpioPath[3], gpio);
-  if ((pin = fopen(buf,"r")) != NULL) {
-    fscanf(pin, "%u", value);
-    fclose(pin);
-    return;
+  assert(pin < MAX_PINS);
+  if ((fd = gpio_get_fd(pin,O_RDONLY)) != -1) {
+    readSize = read(fd,buf,128);
+    if (readSize < 0) {
+      gpio_close_fd(fd);
+      perror("Failed to get zero length");
+      assert(0);
+      return 0;
+    }
+    buf[readSize] = '\0';
+    gpio_close_fd(fd);
+    return atoi(buf);
   }
+
   perror("Failed to get value for pin");
   assert(0);
+  return 0;
 }
 
-void gpio_set_edge(unsigned gpio, const char* edge) {
-  FILE *pin;
-  char buf[128];
+void gpio_set_edge(unsigned pin, const char* edge) {
+  char filename[128];
 
-  snprintf(buf, sizeof(buf), gpioPath[4], gpio);
-  if ((pin = fopen(buf,"w")) != NULL) {
-    fprintf(pin, "%s", edge);
-    fclose(pin);
-    return;
+  assert(pin < MAX_PINS);
+  snprintf(filename, sizeof(filename), gpioPath[4], pins[pin].gpio);
+  if ( ! fileecho_str(filename,edge) )
+  {
+    perror("failed to set edge");
+    assert(0);
   }
-  perror("failed to set edge");
-  assert(0);
 }
 
-void gpio_set_active_low(unsigned gpio, unsigned value) {
-  FILE *pin;
-  char buf[128];
+void gpio_set_active_low(unsigned pin, unsigned value) {
+  char filename[128];
 
+  assert(pin < MAX_PINS);
   assert(value == HIGH || value == LOW);
-  snprintf(buf, sizeof(buf), gpioPath[5], gpio);
-  if ((pin = fopen(buf,"w")) != NULL) {
-    fprintf(pin, "%u", value);
-    fclose(pin);
-    return;
+  snprintf(filename ,sizeof(filename), gpioPath[5], pins[pin].gpio);
+  if ( ! fileecho(filename,value) )
+  {
+    perror("failed to set active low for pin");
+    assert(0);
   }
-  perror("failed to set active low for pin");
-  assert(0);
 }
 
 
-int gpio_get_fd(unsigned gpio, int flag) {
+int gpio_get_fd(unsigned pin, int flag) {
   int fd;
-  char buf[128];
+  char filename[128];
 
+  assert(pin < MAX_PINS);
   // gpioPath[3] = "/sys/class/gpio/gpio%u/value"
-  snprintf(buf, sizeof(buf),gpioPath[3], gpio);
-  fd = open(buf, flag );
+  snprintf(filename, sizeof(filename),gpioPath[3], pins[pin].gpio);
+  fd = open(filename, flag );
   assert(fd != -1);
   return fd;
 }

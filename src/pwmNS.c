@@ -1,3 +1,5 @@
+
+
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,30 +9,33 @@
 
 static const struct option longOpts[] = {
   { "pin", required_argument, NULL, 'p' },
-  { "value", required_argument, NULL, 'v' },
+  { "period", required_argument, NULL, 'r' },
+  { "duty", required_argument, NULL, 'd' },
   { "help", no_argument, NULL, 'h'},
   { NULL, no_argument, NULL, 0}
 };
 
-static const char *optString = "p:v:h";
+static const char *optString = "p:h";
 
 static char* pinStr;
-static char* valueStr;
 
 static int pinIndex = -1;
-static int value = -1;
+static int periodValue = -1;
+static int dutyValue = -1;
 static int helpDisplayed = 0;
 
 void display_usage() {
-  printf("pinMux --pin <pin> --value <value>\n");
-  printf("\t<pin>\te.g. P8_45\n");
-  printf("\t<value>\tdecimal value of the new mux code\n");
+  printf("pwm --pin <pin> --period <freq> --duty <duty>\n");
+  printf("\t<pin>\tan analog pin number, Arduino style, e.g. 0, 1, ...\n");
+  printf("\t\tmaps to the according AIN pin of the beaglebone.\n");
+  printf("\t\tthe value is written to stdout\n");
+  printf("\n");
   printf("\n");
 }
 
 
-void doMux(unsigned pinIndex, unsigned value) {
-  gpio_mux(pinIndex, value);
+void doPWM(unsigned pin,unsigned period,unsigned duty) {
+  pwmNSOut(pin,period,duty);
 }
 
 
@@ -40,11 +45,13 @@ int main(int argc, char **argv) {
     switch(opt) {
     case 'p':
       pinStr = optarg;
-      pinIndex = compute_pin_index(pinStr);
+      sscanf(pinStr, "%u", &pinIndex);
       break;
-    case 'v':
-      valueStr = optarg;
-      sscanf(valueStr, "%u", &value);
+    case 'r':
+      sscanf(optarg,"%u",&periodValue);
+      break;
+    case 'd':
+      sscanf(optarg,"%u",&dutyValue);
       break;
     case 'h':
     case '?':
@@ -56,8 +63,8 @@ int main(int argc, char **argv) {
       break;
     }
   }
-  if (pinIndex != -1 && value != -1) {
-    doMux(pinIndex, value);
+  if (pinIndex >= 0 && pinIndex <= 7) {
+    doPWM(pinIndex,periodValue,dutyValue);
   }
   else {
     display_usage();

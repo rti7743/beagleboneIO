@@ -12,4 +12,9 @@
  */
 extern unsigned compute_pin_index(const char* pinStr);
 
+extern unsigned fileecho(const char * filename ,unsigned value) ;
+extern unsigned fileechoX(const char * filename ,unsigned value) ;
+extern unsigned fileecho_str(const char * filename , const char* str) ;
+extern unsigned fileoneline(const char * filename , unsigned * value) ;
+
 #endif /* _UTIL_H */

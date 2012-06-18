@@ -5,609 +5,581 @@
 #include "beaglepins.h"
 #include "beaglegpio.h"
 
-PIN pins[] = {
+const PIN pins[] = {
 /* P8_1 */
-{"DGND", 0, {
-	}	
+{"DGND"
+		,0				//gpio
+		,""				//mux
+		,0				//eeprom
 },
 /* P8_2 */
-{"DGND", 0, {
-	}	
+{"DGND"
+		,0				//gpio
+		,""				//mux
+		,0				//eeprom
 },
 /* P8_3 */
-{"GPIO1_6", 3, {
-	{"gpio", "38"},
-	{"mux", "gpmc_ad6"},
-	{"eeprom", "26"}
-	}	
+{"GPIO1_6"
+		,38				//gpio
+		,"gpmc_ad6"		//mux
+		,26				//eeprom
 },
 /* P8_4 */
-{"GPIO1_7", 3, {
-	{"gpio", "39"},
-	{"mux", "gpmc_ad7"},
-	{"eeprom", "27"}
-	}	
+{"GPIO1_7"
+		,39				//gpio
+		,"gpmc_ad7"		//mux
+		,27				//eeprom
 },
 /* P8_5 */
-{"GPIO1_2", 3, {
-	{"gpio", "34"},
-	{"mux", "gpmc_ad2"},
-	{"eeprom", "22"}
-	}	
+{"GPIO1_2"
+		,34				//gpio
+		,"gpmc_ad2"		//mux
+		,22				//eeprom
 },
 /* P8_6 */
-{"GPIO1_3", 3, {
-	{"gpio", "35"},
-	{"mux", "gpmc_ad3"},
-	{"eeprom", "23"}
-	}	
+{"GPIO1_3"
+		,35				//gpio
+		,"gpmc_ad3"		//mux
+		,23				//eeprom
 },
 /* P8_7 */
-{"TIMER4", 3, {
-	{"gpio", "66"},
-	{"mux", "gpmc_advn_ale"},
-	{"eeprom", "41"}
-	}	
+{"TIMER4"
+		,66				//gpio
+		,"gpmc_advn_ale"//mux
+		,41				//eeprom
 },
 /* P8_8 */
-{"TIMER7", 3, {
-	{"gpio", "67"},
-	{"mux", "gpmc_oen_ren"},
-	{"eeprom", "44"}
-	}	
+{"TIMER7"
+		,67				//gpio
+		,"gpmc_oen_ren"	//mux
+		,44				//eeprom
 },
 /* P8_9 */
-{"TIMER5", 3, {
-	{"gpio", "69"},
-	{"mux", "gpmc_ben0_cle"},
-	{"eeprom", "42"}
-	}	
+{"TIMER5"
+		,69				//gpio
+		,"gpmc_ben0_cle"//mux
+		,42				//eeprom
 },
 /* P8_10 */
-{"TIMER6", 3, {
-	{"gpio", "68"},
-	{"mux", "gpmc_wen"},
-	{"eeprom", "43"}
-	}	
+{"TIMER6"
+		,68				//gpio
+		,"gpmc_wen"		//mux
+		,43				//eeprom
 },
 /* P8_11 */
-{"GPIO1_13", 3, {
-	{"gpio", "45"},
-	{"mux", "gpmc_ad13"},
-	{"eeprom", "29"}
-	}	
+{"GPIO1_13"
+		,45				//gpio
+		,"gpmc_ad13"	//mux
+		,29				//eeprom
 },
 /* P8_12 */
-{"GPIO1_12", 3, {
-	{"gpio", "44"},
-	{"mux", "gpmc_ad12"},
-	{"eeprom", "28"}
-	}	
+{"GPIO1_12"
+		,44				//gpio
+		,"gpmc_ad12"	//mux
+		,28				//eeprom
 },
 /* P8_13 */
-{"EHRPWM2B", 3, {
-	{"gpio", "23"},
-	{"mux", "gpmc_ad9"},
-	{"eeprom", "15"}
-	}	
+{"EHRPWM2B"
+		,23				//gpio
+		,"gpmc_ad9"		//mux
+		,15				//eeprom
 },
 /* P8_14 */
-{"GPIO0_26", 3, {
-	{"gpio", "26"},
-	{"mux", "gpmc_ad10"},
-	{"eeprom", "16"}
-	}	
+{"GPIO0_26"
+		,26				//gpio
+		,"gpmc_ad10"	//mux
+		,16				//eeprom
 },
 /* P8_15 */
-{"GPIO1_15", 3, {
-	{"gpio", "47"},
-	{"mux", "gpmc_ad15"},
-	{"eeprom", "31"}
-	}	
+{"GPIO1_15"
+		,47				//gpio
+		,"gpmc_ad15"	//mux
+		,31				//eeprom
 },
 /* P8_16 */
-{"GPIO1_14", 3, {
-	{"gpio", "46"},
-	{"mux", "gpmc_ad14"},
-	{"eeprom", "30"}
-	}	
+{"GPIO1_14"
+		,46				//gpio
+		,"gpmc_ad14"	//mux
+		,30				//eeprom
 },
 /* P8_17 */
-{"GPIO0_27", 3, {
-	{"gpio", "27"},
-	{"mux", "gpmc_ad11"},
-	{"eeprom", "17"}
-	}	
+{"GPIO0_27"
+		,27				//gpio
+		,"gpmc_ad11"	//mux
+		,17				//eeprom
 },
 /* P8_18 */
-{"GPIO2_1", 3, {
-	{"gpio", "65"},
-	{"mux", "gpmc_clk"},
-	{"eeprom", "40"}
-	}	
+{"GPIO2_1"
+		,65				//gpio
+		,"gpmc_clk"		//mux
+		,40				//eeprom
 },
 /* P8_19 */
-{"EHRPWM2A", 3, {
-	{"gpio", "22"},
-	{"mux", "gpmc_ad8"},
-	{"eeprom", "14"}
-	}	
+{"EHRPWM2A"
+		,22				//gpio
+		,"gpmc_ad8"		//mux
+		,14				//eeprom
 },
 /* P8_20 */
-{"GPIO1_31", 3, {
-	{"gpio", "63"},
-	{"mux", "gpmc_csn2"},
-	{"eeprom", "39"}
-	}	
+{"GPIO1_31"
+		,63				//gpio
+		,"gpmc_csn2"	//mux
+		,39				//eeprom
 },
 /* P8_21 */
-{"GPIO1_30", 3, {
-	{"gpio", "62"},
-	{"mux", "gpmc_csn1"},
-	{"eeprom", "38"}
-	}	
+{"GPIO1_30"
+		,62				//gpio
+		,"gpmc_csn1"	//mux
+		,38				//eeprom
 },
 /* P8_22 */
-{"GPIO1_5", 3, {
-	{"gpio", "37"},
-	{"mux", "gpmc_ad5"},
-	{"eeprom", "25"}
-	}	
+{"GPIO1_5"
+		,37				//gpio
+		,"gpmc_ad5"		//mux
+		,25				//eeprom
 },
 /* P8_23 */
-{"GPIO1_4", 3, {
-	{"gpio", "36"},
-	{"mux", "gpmc_ad4"},
-	{"eeprom", "24"}
-	}	
+{"GPIO1_4"
+		,36				//gpio
+		,"gpmc_ad4"		//mux
+		,24				//eeprom
 },
 /* P8_24 */
-{"GPIO1_1", 3, {
-	{"gpio", "33"},
-	{"mux", "gpmc_ad1"},
-	{"eeprom", "21"}
-	}	
+{"GPIO1_1"
+		,33				//gpio
+		,"gpmc_ad1"		//mux
+		,21				//eeprom
 },
 /* P8_25 */
-{"GPIO1_0", 3, {
-	{"gpio", "32"},
-	{"mux", "gpmc_ad0"},
-	{"eeprom", "20"}
-	}	
+{"GPIO1_0"
+		,32				//gpio
+		,"gpmc_ad0"		//mux
+		,20				//eeprom
 },
 /* P8_26 */
-{"GPIO1_29", 3, {
-	{"gpio", "61"},
-	{"mux", "gpmc_csn0"},
-	{"eeprom", "37"}
-	}	
+{"GPIO1_29"
+		,61				//gpio
+		,"gpmc_csn0"	//mux
+		,37				//eeprom
 },
 /* P8_27 */
-{"GPIO2_22", 3, {
-	{"gpio", "86"},
-	{"mux", "lcd_vsync"},
-	{"eeprom", "57"}
-	}	
+{"GPIO2_22"
+		,86				//gpio
+		,"lcd_vsync"	//mux
+		,57				//eeprom
 },
 /* P8_28 */
-{"GPIO2_24", 3, {
-	{"gpio", "88"},
-	{"mux", "lcd_pclk"},
-	{"eeprom", "59"}
-	}	
+{"GPIO2_24"
+		,88				//gpio
+		,"lcd_pclk"		//mux
+		,59				//eeprom
 },
 /* P8_29 */
-{"GPIO2_23", 3, {
-	{"gpio", "87"},
-	{"mux", "lcd_hsync"},
-	{"eeprom", "58"}
-	}	
+{"GPIO2_23"
+		,87				//gpio
+		,"lcd_hsync"	//mux
+		,58				//eeprom
 },
 /* P8_30 */
-{"GPIO2_25", 3, {
-	{"gpio", "89"},
-	{"mux", "lcd_ac_bias_en"},
-	{"eeprom", "60"}
-	}	
+{"GPIO2_25"
+		,89				//gpio
+		,"lcd_ac_bias_en"//mux
+		,60				//eeprom
 },
 /* P8_31 */
-{"UART5_CTSN", 3, {
-	{"gpio", "10"},
-	{"mux", "lcd_data14"},
-	{"eeprom", "7"}
-	}	
+{"UART5_CTSN"
+		,10				//gpio
+		,"lcd_data14"	//mux
+		,7				//eeprom
 },
 /* P8_32 */
-{"UART5_RTSN", 3, {
-	{"gpio", "11"},
-	{"mux", "lcd_data15"},
-	{"eeprom", "8"}
-	}	
+{"UART5_RTSN"
+		,11				//gpio
+		,"lcd_data15"	//mux
+		,8				//eeprom
 },
 /* P8_33 */
-{"UART4_RTSN", 3, {
-	{"gpio", "9"},
-	{"mux", "lcd_data13"},
-	{"eeprom", "6"}
-	}	
+{"UART4_RTSN"
+		,9				//gpio
+		,"lcd_data13"	//mux
+		,6				//eeprom
 },
 /* P8_34 */
-{"UART3_RTSN", 3, {
-	{"gpio", "81"},
-	{"mux", "lcd_data11"},
-	{"eeprom", "56"}
-	}	
+{"UART3_RTSN"
+		,81				//gpio
+		,"lcd_data11"	//mux
+		,56				//eeprom
 },
 /* P8_35 */
-{"UART4_CTSN", 3, {
-	{"gpio", "8"},
-	{"mux", "lcd_data12"},
-	{"eeprom", "5"}
-	}	
+{"UART4_CTSN"
+		,8				//gpio
+		,"lcd_data12"	//mux
+		,5				//eeprom
 },
 /* P8_36 */
-{"UART3_CTSN", 3, {
-	{"gpio", "80"},
-	{"mux", "lcd_data10"},
-	{"eeprom", "55"}
-	}	
+{"UART3_CTSN"
+		,80				//gpio
+		,"lcd_data10"	//mux
+		,55				//eeprom
 },
 /* P8_37 */
-{"UART5_TXD", 3, {
-	{"gpio", "78"},
-	{"mux", "lcd_data8"},
-	{"eeprom", "53"}
-	}	
+{"UART5_TXD"
+		,78				//gpio
+		,"lcd_data8"	//mux
+		,53				//eeprom
 },
 /* P8_38 */
-{"UART5_RXD", 3, {
-	{"gpio", "79"},
-	{"mux", "lcd_data9"},
-	{"eeprom", "54"}
-	}	
+{"UART5_RXD"
+		,79				//gpio
+		,"lcd_data9"	//mux
+		,54				//eeprom
 },
 /* P8_39 */
-{"GPIO2_12", 3, {
-	{"gpio", "76"},
-	{"mux", "lcd_data6"},
-	{"eeprom", "51"}
-	}	
+{"GPIO2_12"
+		,76				//gpio
+		,"lcd_data6"	//mux
+		,51				//eeprom
 },
 /* P8_40 */
-{"GPIO2_13", 3, {
-	{"gpio", "77"},
-	{"mux", "lcd_data7"},
-	{"eeprom", "52"}
-	}	
+{"GPIO2_13"
+		,77				//gpio
+		,"lcd_data7"	//mux
+		,52				//eeprom
 },
 /* P8_41 */
-{"GPIO2_10", 3, {
-	{"gpio", "74"},
-	{"mux", "lcd_data4"},
-	{"eeprom", "49"}
-	}	
+{"GPIO2_10"
+		,74				//gpio
+		,"lcd_data4"	//mux
+		,49				//eeprom
 },
 /* P8_42 */
-{"GPIO2_11", 3, {
-	{"gpio", "75"},
-	{"mux", "lcd_data5"},
-	{"eeprom", "50"}
-	}	
+{"GPIO2_11"
+		,75				//gpio
+		,"lcd_data5"	//mux
+		,50				//eeprom
 },
 /* P8_43 */
-{"GPIO2_8", 3, {
-	{"gpio", "72"},
-	{"mux", "lcd_data2"},
-	{"eeprom", "47"}
-	}	
+{"GPIO2_8"
+		,72				//gpio
+		,"lcd_data2"	//mux
+		,47				//eeprom
 },
 /* P8_44 */
-{"GPIO2_9", 3, {
-	{"gpio", "73"},
-	{"mux", "lcd_data3"},
-	{"eeprom", "48"}
-	}	
+{"GPIO2_9"
+		,73				//gpio
+		,"lcd_data3"	//mux
+		,48				//eeprom
 },
 /* P8_45 */
-{"GPIO2_6", 3, {
-	{"gpio", "70"},
-	{"mux", "lcd_data0"},
-	{"eeprom", "45"}
-	}	
+{"GPIO2_6"
+		,70				//gpio
+		,"lcd_data0"	//mux
+		,45				//eeprom
 },
 /* P8_46 */
-{"GPIO2_7", 3, {
-	{"gpio", "71"},
-	{"mux", "lcd_data1"},
-	{"eeprom", "46"}
-	}	
+{"GPIO2_7"
+		,71				//gpio
+		,"lcd_data1"	//mux
+		,46				//eeprom
 },
 /* P9_1 */
-{"DGND", 0, {
-	}	
+{"DGND"
+		,0				//gpio
+		,""				//mux
+		,0				//eeprom
 },
 /* P9_2 */
-{"DGND", 0, {
-	}	
+{"DGND"
+		,0				//gpio
+		,""				//mux
+		,0				//eeprom
 },
 /* P9_3 */
-{"VDD_3V3", 0, {
-	}	
+{"VDD_3V3"
+		,0				//gpio
+		,""				//mux
+		,0				//eeprom
 },
 /* P9_4 */
-{"VDD_3V3", 0, {
-	}	
+{"VDD_3V3"
+		,0				//gpio
+		,""				//mux
+		,0				//eeprom
 },
 /* P9_5 */
-{"VDD_5V", 0, {
-	}	
+{"VDD_5V"
+		,0				//gpio
+		,""				//mux
+		,0				//eeprom
 },
 /* P9_6 */
-{"VDD_5V", 0, {
-	}	
+{"VDD_5V"
+		,0				//gpio
+		,""				//mux
+		,0				//eeprom
 },
 /* P9_7 */
-{"SYS_5V", 0, {
-	}	
+{"SYS_5V"
+		,0				//gpio
+		,""				//mux
+		,0				//eeprom
 },
 /* P9_8 */
-{"SYS_5V", 0, {
-	}	
+{"SYS_5V"
+		,0				//gpio
+		,""				//mux
+		,0				//eeprom
 },
 /* P9_9 */
-{"PWR_BUT", 0, {
-	}	
+{"PWR_BUT"
+		,0				//gpio
+		,""				//mux
+		,0				//eeprom
 },
 /* P9_10 */
-{"SYS_RESETn", 0, {
-	}	
+{"SYS_RESETn"
+		,0				//gpio
+		,""				//mux
+		,0				//eeprom
 },
 /* P9_11 */
-{"UART4_RXD", 3, {
-	{"gpio", "30"},
-	{"mux", "gpmc_wait0"},
-	{"eeprom", "18"}
-	}	
+{"UART4_RXD"
+		,30				//gpio
+		,"gpmc_wait0"	//mux
+		,18				//eeprom
 },
 /* P9_12 */
-{"GPIO1_28", 3, {
-	{"gpio", "60"},
-	{"mux", "gpmc_ben1"},
-	{"eeprom", "36"}
-	}	
+{"GPIO1_28"
+		,60				//gpio
+		,"gpmc_ben1"	//mux
+		,36				//eeprom
 },
 /* P9_13 */
-{"UART4_TXD", 3, {
-	{"gpio", "31"},
-	{"mux", "gpmc_wpn"},
-	{"eeprom", "19"}
-	}	
+{"UART4_TXD"
+		,31				//gpio
+		,"gpmc_wpn"		//mux
+		,19				//eeprom
 },
 /* P9_14 */
-{"EHRPWM1A", 3, {
-	{"gpio", "50"},
-	{"mux", "gpmc_a2"},
-	{"eeprom", "34"}
-	}	
+{"EHRPWM1A"
+		,50				//gpio
+		,"gpmc_a2"		//mux
+		,34				//eeprom
 },
 /* P9_15 */
-{"GPIO1_16", 3, {
-	{"gpio", "48"},
-	{"mux", "mii1_rxd3"},
-	{"eeprom", "32"}
-	}	
+{"GPIO1_16"
+		,48				//gpio
+		,"mii1_rxd3"	//mux
+		,32				//eeprom
 },
 /* P9_16 */
-{"EHRPWM1B", 3, {
-	{"gpio", "51"},
-	{"mux", "gpmc_a3"},
-	{"eeprom", "35"}
-	}	
+{"EHRPWM1B"
+		,51				//gpio
+		,"gpmc_a3"		//mux
+		,35				//eeprom
 },
 /* P9_17 */
-{"I2C1_SCL", 3, {
-	{"gpio", "5"},
-	{"mux", "spi0_cs0"},
-	{"eeprom", "3"}
-	}	
+{"I2C1_SCL"
+		,5				//gpio
+		,"spi0_cs0"		//mux
+		,3				//eeprom
 },
 /* P9_18 */
-{"I2C1_SDA", 3, {
-	{"gpio", "4"},
-	{"mux", "spi0_d1"},
-	{"eeprom", "2"}
-	}	
+{"I2C1_SDA"
+		,4				//gpio
+		,"spi0_d1"		//mux
+		,2				//eeprom
 },
 /* P9_19 */
-{"I2C2_SCL", 3, {
-	{"gpio", "13"},
-	{"mux", "uart1_rtsn"},
-	{"eeprom", "9"}
-	}	
+{"I2C2_SCL"
+		,13				//gpio
+		,"uart1_rtsn"	//mux
+		,9				//eeprom
 },
 /* P9_20 */
-{"I2C2_SDA", 3, {
-	{"gpio", "12"},
-	{"mux", "uart1_ctsn"},
-	{"eeprom", "10"}
-	}	
+{"I2C2_SDA"
+		,12				//gpio
+		,"uart1_ctsn"	//mux
+		,10				//eeprom
 },
 /* P9_21 */
-{"UART2_TXD", 3, {
-	{"gpio", "3"},
-	{"mux", "spi0_d0"},
-	{"eeprom", "1"}
-	}	
+{"UART2_TXD"
+		,3				//gpio
+		,"spi0_d0"		//mux
+		,1				//eeprom
 },
 /* P9_22 */
-{"UART2_RXD", 3, {
-	{"gpio", "2"},
-	{"mux", "spi0_sclk"},
-	{"eeprom", "0"}
-	}	
+{"UART2_RXD"
+		,2				//gpio
+		,"spi0_sclk"	//mux
+		,0				//eeprom
 },
 /* P9_23 */
-{"GPIO1_17", 3, {
-	{"gpio", "49"},
-	{"mux", "gpmc_a1"},
-	{"eeprom", "33"}
-	}	
+{"GPIO1_17"
+		,49				//gpio
+		,"gpmc_a1"		//mux
+		,33				//eeprom
 },
 /* P9_24 */
-{"UART1_TXD", 3, {
-	{"gpio", "15"},
-	{"mux", "uart1_txd"},
-	{"eeprom", "12"}
-	}	
+{"UART1_TXD"
+		,15				//gpio
+		,"uart1_txd"	//mux
+		,12				//eeprom
 },
 /* P9_25 */
-{"GPIO3_21", 3, {
-	{"gpio", "117"},
-	{"mux", "mcasp0_ahclkx"},
-	{"eeprom", "66"}
-	}	
+{"GPIO3_21"
+		,117				//gpio
+		,"mcasp0_ahclkx"//mux
+		,66				//eeprom
 },
 /* P9_26 */
-{"UART1_RXD", 3, {
-	{"gpio", "14"},
-	{"mux", "uart1_rxd"},
-	{"eeprom", "11"}
-	}	
+{"UART1_RXD"
+		,14				//gpio
+		,"uart1_rxd"	//mux
+		,11				//eeprom
 },
 /* P9_27 */
-{"GPIO3_19", 3, {
-	{"gpio", "115"},
-	{"mux", "mcasp0_fsr"},
-	{"eeprom", "64"}
-	}	
+{"GPIO3_19"
+		,115				//gpio
+		,"mcasp0_fsr"	//mux
+		,64				//eeprom
 },
 /* P9_28 */
-{"SPI1_CS0", 3, {
-	{"gpio", "113"},
-	{"mux", "mcasp0_ahclkr"},
-	{"eeprom", "63"}
-	}	
+{"SPI1_CS0"
+		,113				//gpio
+		,"mcasp0_ahclkr"//mux
+		,63				//eeprom
 },
 /* P9_29 */
-{"SPI1_D0", 3, {
-	{"gpio", "111"},
-	{"mux", "mcasp0_fsx"},
-	{"eeprom", "61"}
-	}	
+{"SPI1_D0"
+		,111				//gpio
+		,"mcasp0_fsx"	//mux
+		,61				//eeprom
 },
 /* P9_30 */
-{"SPI1_D1", 3, {
-	{"gpio", "112"},
-	{"mux", "mcasp0_axr0"},
-	{"eeprom", "62"}
-	}	
+{"SPI1_D1"
+		,112				//gpio
+		,"mcasp0_axr0"	//mux
+		,62				//eeprom
 },
 /* P9_31 */
-{"SPI1_SCLK", 3, {
-	{"gpio", "110"},
-	{"mux", "mcasp0_aclkx"},
-	{"eeprom", "65"}
-	}	
+{"SPI1_SCLK"
+		,110				//gpio
+		,"mcasp0_aclkx"	//mux
+		,65				//eeprom
 },
 /* P9_32 */
-{"VDD_ADC", 0, {
-	}	
+{"VDD_ADC"
+		,0				//gpio
+		,""				//mux
+		,0				//eeprom
 },
 /* P9_33 */
-{"AIN4", 1, {
-	{"eeprom", "71"}
-	}	
+{"AIN4"
+		,0				//gpio
+		,""	//mux
+		,71				//eeprom
 },
 /* P9_34 */
-{"GNDA_ADC", 0, {
-	}	
+{"GNDA_ADC"
+		,0				//gpio
+		,""				//mux
+		,0				//eeprom
 },
 /* P9_35 */
-{"AIN6", 1, {
-	{"eeprom", "73"}
-	}	
+{"AIN6"
+		,0				//gpio
+		,""				//mux
+		,73				//eeprom
 },
 /* P9_36 */
-{"AIN5", 1, {
-	{"eeprom", "72"}
-	}	
+{"AIN5"
+		,0				//gpio
+		,""				//mux
+		,72				//eeprom
 },
 /* P9_37 */
-{"AIN2", 1, {
-	{"eeprom", "69"}
-	}	
+{"AIN2"
+		,0				//gpio
+		,""				//mux
+		,69				//eeprom
 },
 /* P9_38 */
-{"AIN3", 1, {
-	{"eeprom", "70"}
-	}	
+{"AIN3"
+		,0				//gpio
+		,""				//mux
+		,70				//eeprom
 },
 /* P9_39 */
-{"AIN0", 1, {
-	{"eeprom", "67"}
-	}	
+{"AIN0"
+		,0				//gpio
+		,""				//mux
+		,67				//eeprom
 },
 /* P9_40 */
-{"AIN1", 1, {
-	{"eeprom", "68"}
-	}	
+{"AIN1"
+		,0				//gpio
+		,""				//mux
+		,68				//eeprom
 },
 /* P9_41 */
-{"CLKOUT2", 3, {
-	{"gpio", "20"},
-	{"mux", "xdma_event_intr1"},
-	{"eeprom", "13"}
-	}	
+{"CLKOUT2"
+		,20				//gpio
+		,"xdma_event_intr1"//mux
+		,13				//eeprom
 },
 /* P9_42 */
-{"GPIO0_7", 3, {
-	{"gpio", "7"},
-	{"mux", "ecap0_in_pwm0_out"},
-	{"eeprom", "4"}
-	}	
+{"GPIO0_7"
+		,7				//gpio
+		,"ecap0_in_pwm0_out"//mux
+		,4				//eeprom
 },
 /* P9_43 */
-{"DGND", 0, {
-	}	
+{"DGND"
+		,0				//gpio
+		,""				//mux
+		,0				//eeprom
 },
 /* P9_44 */
-{"DGND", 0, {
-	}	
+{"DGND"
+		,0				//gpio
+		,""				//mux
+		,0				//eeprom
 },
 /* P9_45 */
-{"DGND", 0, {
-	}	
+{"DGND"
+		,0				//gpio
+		,""				//mux
+		,0				//eeprom
 },
 /* P9_46 */
-{"DGND", 0, {
-	}	
+{"DGND"
+		,0				//gpio
+		,""				//mux
+		,0				//eeprom
 },
 /* USR0 */
-{"USR0", 3, {
-	{"gpio", "53"},
-	{"led", "usr0"},
-	{"mux", "gpmc_a5"}
-	}	
+{"USR0"
+		,53				//gpio
+		,"gpmc_a5"		//mux
+		,0				//eeprom
 },
 /* USR1 */
-{"USR1", 3, {
-	{"gpio", "54"},
-	{"led", "usr1"},
-	{"mux", "gpmc_a6"}
-	}	
+{"USR1"
+		,54				//gpio
+		,"gpmc_a6"		//mux
+		,0				//eeprom
 },
 /* USR2 */
-{"USR2", 3, {
-	{"gpio", "55"},
-	{"led", "usr2"},
-	{"mux", "gpmc_a7"}
-	}	
+{"USR2"
+		,55				//gpio
+		,"gpmc_a7"		//mux
+		,0				//eeprom
 },
 /* USR3 */
-{"USR3", 3, {
-	{"gpio", "56"},
-	{"led", "usr3"},
-	{"mux", "gpmc_a8"}
-	}	
+{"USR3"
+		,56				//gpio
+		,"gpmc_a8"		//mux
+		,0				//eeprom
 }
 };

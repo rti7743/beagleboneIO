@@ -28,12 +28,10 @@ void display_usage() {
 
 
 void doDigitalRead(unsigned pinIndex) {
-  PIN pin;
   unsigned value;
 
-  pin = pins[pinIndex];
-  pinMode(pin, INPUT);
-  value = digitalRead(pin);
+  pinMode(pinIndex, INPUT);
+  value = digitalRead(pinIndex);
 
   printf("%u\n",value);
 }

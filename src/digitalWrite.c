@@ -32,11 +32,8 @@ void display_usage() {
 
 
 void doDigitalWrite(unsigned pinIndex, unsigned value) {
-  PIN pin;
-
-  pin = pins[pinIndex];
-  pinMode(pin, OUTPUT);
-  digitalWrite(pin, value);
+  pinMode(pinIndex, OUTPUT);
+  digitalWrite(pinIndex, value);
 }
 
 

@@ -1,3 +1,5 @@
+
+
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,25 +14,27 @@ static const struct option longOpts[] = {
   { NULL, no_argument, NULL, 0}
 };
 
-static const char *optString = "p:v:h";
+static const char *optString = "p:h";
 
 static char* pinStr;
-static char* valueStr;
 
 static int pinIndex = -1;
-static int value = -1;
+static int writeValue = -1;
 static int helpDisplayed = 0;
 
 void display_usage() {
-  printf("pinMux --pin <pin> --value <value>\n");
-  printf("\t<pin>\te.g. P8_45\n");
-  printf("\t<value>\tdecimal value of the new mux code\n");
+  printf("analogWrite --pin <pin> --value <value>\n");
+  printf("\t<pin>\tan analog pin number, Arduino style, e.g. 0, 1, ...\n");
+  printf("\t\tmaps to the according AIN pin of the beaglebone.\n");
+  printf("\t\tthe value is written to stdout\n");
+  printf("\n");
+  printf("\t<value>\outp\n"); 
   printf("\n");
 }
 
 
-void doMux(unsigned pinIndex, unsigned value) {
-  gpio_mux(pinIndex, value);
+void doAnalogWrite(unsigned pin,unsigned value) {
+  analogWrite(pin,value);
 }
 
 
@@ -40,11 +44,10 @@ int main(int argc, char **argv) {
     switch(opt) {
     case 'p':
       pinStr = optarg;
-      pinIndex = compute_pin_index(pinStr);
+      sscanf(pinStr, "%u", &pinIndex);
       break;
     case 'v':
-      valueStr = optarg;
-      sscanf(valueStr, "%u", &value);
+      sscanf(optarg,"%u",&writeValue);
       break;
     case 'h':
     case '?':
@@ -56,8 +59,8 @@ int main(int argc, char **argv) {
       break;
     }
   }
-  if (pinIndex != -1 && value != -1) {
-    doMux(pinIndex, value);
+  if (pinIndex >= 0 && pinIndex <= 7) {
+    doAnalogWrite(pinIndex,writeValue);
   }
   else {
     display_usage();

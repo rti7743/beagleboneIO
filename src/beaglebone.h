@@ -6,6 +6,7 @@
 
 #include "beaglegpio.h"
 #include "beagledelay.h"
+#include "beagleutil.h"
 
 /** Least significant byte first
  *
@@ -24,7 +25,7 @@
  * @param mode INPUT or OUTPUT
  *
  */
-extern void pinMode(const PIN pin, unsigned mode);
+extern void pinMode(unsigned pin, unsigned mode);
 
 /** write to a pin.
  *
@@ -32,7 +33,14 @@ extern void pinMode(const PIN pin, unsigned mode);
  * @param pin the desired pin
  * @param value either HIGH or LOW
  */
-extern void digitalWrite(const PIN pin, unsigned value);
+extern void digitalWrite(unsigned pin, unsigned value);
+
+extern unsigned pwmEnable(unsigned pin,unsigned isenable);
+extern unsigned pwmOut(unsigned pin,unsigned preiod_freq,unsigned duty_percent);
+extern unsigned pwmNSOut(unsigned pin,unsigned period_ns,unsigned duty_ns) ;
+extern unsigned pwmRun(unsigned pin,unsigned isrun);
+extern unsigned analogWrite(unsigned pin,unsigned value);
+
 
 /** read from a pin.
  * 
@@ -40,14 +48,14 @@ extern void digitalWrite(const PIN pin, unsigned value);
  * @param pin the desired pin
  * @return the value 
  */
-extern unsigned digitalRead(const PIN);
+extern unsigned digitalRead(unsigned PIN);
 
 /** read from an analog pin.
  *
  * @param pin the number of the analog pin specified a 0..6
  * @return the read value
  */
-extern unsigned analogRead(const unsigned pin);
+extern unsigned analogRead(unsigned pin);
 
 /** push the value serially to the dataPin.
  * Writes the designated byte in value bitwise to the dataPin, using clockPin 
@@ -58,7 +66,7 @@ extern unsigned analogRead(const unsigned pin);
  * @param bitOrder one of LSBFIRST or MSBFIRST
  * @param value the value to write
  */
-extern void shiftOut(const PIN dataPin, const PIN clockPin, const unsigned bitOrder, const unsigned value);
+extern void shiftOut(unsigned dataPin,unsigned clockPin,unsigned bitOrder,unsigned value);
 
 /**
  * Run a programm.
