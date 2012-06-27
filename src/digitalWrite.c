@@ -32,6 +32,7 @@ void display_usage() {
 
 
 void doDigitalWrite(unsigned pinIndex, unsigned value) {
+  memmap_ctor();
   pinMode(pinIndex, OUTPUT);
   digitalWrite(pinIndex, value);
 }

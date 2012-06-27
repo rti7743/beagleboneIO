@@ -37,51 +37,7 @@ const char* PWM_DEVICE_LIST[PWM_LIST_MAX] = {
 	,"/sys/class/pwm/ehrpwm.0:0"
 //	,"/sys/class/pwm/ehrpwm.0:1"
 };
-static unsigned s_pwm_init_flag[PWM_LIST_MAX] = {0,0,0};
 
-unsigned pwmEnable(unsigned pin,unsigned isenable) {
-  int ret;
-  int dev_mem_fd;
-  volatile uint32_t* cm_per_regs;
-
-  if (pin >= PWM_LIST_MAX) {
-    return 0;
-  }
-
-  dev_mem_fd = open ("/dev/mem", O_RDWR);
-  if (dev_mem_fd == -1) {
-    return 0;
-  }
-
-  cm_per_regs = (volatile uint32_t *)mmap (NULL, CM_PER_REG_LENGTH,
-					   PROT_READ | PROT_WRITE, MAP_SHARED, dev_mem_fd, CM_PER_REG_START);
-  if (cm_per_regs == (volatile uint32_t *)MAP_FAILED) {
-    close (dev_mem_fd);
-    return 0;
-  }
-
-  if (isenable) {
-    cm_per_regs[pin] = PWM_CLOCK_ENABLE;
-  }
-  else {
-    cm_per_regs[pin] = PWM_CLOCK_DISABLE;
-  }
-
-  munmap ((void *)cm_per_regs, CM_PER_REG_LENGTH);
-  close (dev_mem_fd);
-
-
-  if (isenable) {
-    ret = fileecho("/sys/kernel/debug/omap_mux/gpmc_a2",6);
-    if (!ret) return 0;
-
-    ret = fileecho("/sys/kernel/debug/omap_mux/gpmc_a3",6);
-    if (!ret) return 0;
-  }
-
-  s_pwm_init_flag[pin] = 1;
-  return 1;
-}
 
 unsigned pwmNSOut(unsigned pin,unsigned period_ns,unsigned duty_ns) {
 
@@ -92,9 +48,6 @@ unsigned pwmNSOut(unsigned pin,unsigned period_ns,unsigned duty_ns) {
 
   if (pin >= PWM_LIST_MAX) {
     return 0;
-  }
-  if (!s_pwm_init_flag[pin]) {
-    pwmEnable(pin,1);
   }
 
   snprintf(period_ns_filename,256,"%s/period_ns",PWM_DEVICE_LIST[pin] );
@@ -129,9 +82,6 @@ unsigned pwmOut(unsigned pin,unsigned period_freq,unsigned duty_percent) {
 
   if (pin >= PWM_LIST_MAX) {
     return 0;
-  }
-  if (!s_pwm_init_flag[pin]) {
-    pwmEnable(pin,1);
   }
 
   snprintf(period_freq_filename,256,"%s/period_freq",PWM_DEVICE_LIST[pin] );

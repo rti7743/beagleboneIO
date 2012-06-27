@@ -29,8 +29,8 @@ int ir_receive(unsigned ir_in,unsigned long* outData,int len,int* outLen)
   unsigned int val = 0;
   unsigned int before_val = 1;
   unsigned timeoutTimer = 0;  //micro second tanni nano de besy loop de.
-  const unsigned FIRST_TIMEOUT = 100000;
-  const unsigned END_TIMEOUT = 10000;
+  const unsigned FIRST_TIMEOUT = 10000000;
+  const unsigned END_TIMEOUT   = 1000000;
   struct timeval* tv = (struct timeval*)malloc(sizeof(struct timeval) * (len+1));
   struct timeval* tvNow = &tv[0];
   struct timeval* tvEnd = &tv[len+1];
@@ -38,7 +38,6 @@ int ir_receive(unsigned ir_in,unsigned long* outData,int len,int* outLen)
   puts("----- IR RECEIVE MODE -----");
 
   //first
-  gettimeofday(tvNow, NULL);
   timeoutTimer = 0;
   while( ! digitalRead(ir_in) )
   {
@@ -50,12 +49,10 @@ int ir_receive(unsigned ir_in,unsigned long* outData,int len,int* outLen)
      }
   }
 
+  timeoutTimer = 0;
+  gettimeofday(tvNow++, NULL);
   while(1)
   {
-     timeoutTimer = 0;
-     gettimeofday(tvNow++, NULL);
-     if (tvNow == tvEnd) break;
-
      while( (val = digitalRead(ir_in)  ) ==  before_val )
      {
         if (++timeoutTimer >= END_TIMEOUT)
@@ -63,9 +60,14 @@ int ir_receive(unsigned ir_in,unsigned long* outData,int len,int* outLen)
            break;
         }
      }
-     if (timeoutTimer >= END_TIMEOUT) break;
+     gettimeofday(tvNow, NULL);
 
+     if (timeoutTimer >= END_TIMEOUT) break;
+     if (tvNow == tvEnd) break;
+
+     tvNow ++;
      before_val = val;
+     timeoutTimer = 0;
   }
 
 
@@ -97,17 +99,33 @@ int ir_send(unsigned ir_out,unsigned long* data,int len)
   {
     printf("%lu,",data[cnt]);
   }
-  puts("");
+  digitalWrite(ir_out,0);
+  puts("start.");
   pwmNSOut(1,26300,8800);
 
   for (cnt = 0; cnt < len; cnt++) 
   {
-    usleep(data[cnt]);
-    pwmRun(1 , (cnt&1) );
+    digitalWrite(ir_out,1-(cnt&1));
+    usleep(data[cnt] );
+/*
+      if (cnt & 0x1) {
+         digitalWrite(ir_out,0);
+         usleep(data[cnt]);
+      } else {
+         unsigned long loopCount  = (data[cnt] / (9+17)) + 1;
+	 for( ; loopCount ; loopCount -- ) {
+            digitalWrite(ir_out,1);
+            usleep(9);
+            digitalWrite(ir_out,0);
+            usleep(17);
+	 }
+      }
+*/
   }
+  digitalWrite(ir_out,0);
   pwmRun(1,0);
 
-  puts("");
+  puts("ok");
   puts("----- SEND DONE ------");
   
   return 1;
@@ -150,6 +168,8 @@ int main(int argc, char **argv)
 	int datalen = 0;
 	int ret = 0;
 
+	memmap_ctor();
+
 	printf("argc :%d %c\n",argc,argv[1][0]);
 	if (argc >= 2 && argv[1][0] == 'l')
 	{
@@ -160,7 +180,7 @@ int main(int argc, char **argv)
 			puts("ERROR!!");
 			return -1;
 		}
-		ir_save("ir1_1.dat",data,datalen);
+		ir_save("ir1.dat",data,datalen);
 		return 0;
 	}
 	if (argc >= 2 && argv[1][0] == 's')
@@ -182,6 +202,7 @@ int main(int argc, char **argv)
 		}
 		return 0;
 	}
+	memmap_dtor();
 
 	return 0;
 }

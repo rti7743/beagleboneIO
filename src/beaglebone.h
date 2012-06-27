@@ -7,6 +7,7 @@
 #include "beaglegpio.h"
 #include "beagledelay.h"
 #include "beagleutil.h"
+#include "beaglemem.h"
 
 /** Least significant byte first
  *
@@ -40,6 +41,7 @@ extern unsigned pwmOut(unsigned pin,unsigned preiod_freq,unsigned duty_percent);
 extern unsigned pwmNSOut(unsigned pin,unsigned period_ns,unsigned duty_ns) ;
 extern unsigned pwmRun(unsigned pin,unsigned isrun);
 extern unsigned analogWrite(unsigned pin,unsigned value);
+
 
 
 /** read from a pin.

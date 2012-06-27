@@ -37,7 +37,7 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = pwm_clock$(EXEEXT) digitalWrite$(EXEEXT) \
-	analogRead$(EXEEXT) analogWrite$(EXEEXT) pwm$(EXEEXT) pwmNS$(EXEEXT) pinMux$(EXEEXT) digitalRead$(EXEEXT) pinMux$(EXEEXT)
+	analogRead$(EXEEXT) pinMux$(EXEEXT)
 subdir = src
 DIST_COMMON = README $(include_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in depcomp
@@ -79,28 +79,16 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libbeagleboneio_la_LIBADD =
-am_libbeagleboneio_la_OBJECTS = beaglebone.lo gpio.lo \
+am_libbeagleboneio_la_OBJECTS = beaglebone.lo gpio.lo pair.lo \
 	beaglepins.lo beagledelay.lo beagleuart.lo beaglepwm.lo
 libbeagleboneio_la_OBJECTS = $(am_libbeagleboneio_la_OBJECTS)
 PROGRAMS = $(bin_PROGRAMS)
-am_pwm_OBJECTS = pwm.$(OBJEXT) util.$(OBJEXT)
-pwm_OBJECTS = $(am_pwm_OBJECTS)
-pwm_DEPENDENCIES = libbeagleboneio.la
-am_pwmNS_OBJECTS = pwmNS.$(OBJEXT) util.$(OBJEXT)
-pwmNS_OBJECTS = $(am_pwmNS_OBJECTS)
-pwmNS_DEPENDENCIES = libbeagleboneio.la
-am_analogWrite_OBJECTS = analogWrite.$(OBJEXT) util.$(OBJEXT)
-analogWrite_OBJECTS = $(am_analogWrite_OBJECTS)
-analogWrite_DEPENDENCIES = libbeagleboneio.la
 am_analogRead_OBJECTS = analogRead.$(OBJEXT) util.$(OBJEXT)
 analogRead_OBJECTS = $(am_analogRead_OBJECTS)
 analogRead_DEPENDENCIES = libbeagleboneio.la
 am_digitalWrite_OBJECTS = digitalWrite.$(OBJEXT) util.$(OBJEXT)
 digitalWrite_OBJECTS = $(am_digitalWrite_OBJECTS)
 digitalWrite_DEPENDENCIES = libbeagleboneio.la
-am_digitalRead_OBJECTS = digitalRead.$(OBJEXT) util.$(OBJEXT)
-digitalRead_OBJECTS = $(am_digitalRead_OBJECTS)
-digitalRead_DEPENDENCIES = libbeagleboneio.la
 am_pinMux_OBJECTS = pinMux.$(OBJEXT) util.$(OBJEXT)
 pinMux_OBJECTS = $(am_pinMux_OBJECTS)
 pinMux_DEPENDENCIES = libbeagleboneio.la
@@ -120,10 +108,10 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(libbeagleboneio_la_SOURCES) $(analogRead_SOURCES)  $(analogWrite_SOURCES) pwm.c pwmNS.c \
-	$(digitalWrite_SOURCES) $(digitalRead_SOURCES) $(ir_recv_SOURCES) $(pinMux_SOURCES) $(pwm_clock_SOURCES)
-DIST_SOURCES = $(libbeagleboneio_la_SOURCES) $(analogRead_SOURCES) $(analogWrite_SOURCE) \
-	$(digitalWrite_SOURCES) $(digitalRead_SOURCES) $(ir_recv_SOURCES) $(pinMux_SOURCES) $(pwm_clock_SOURCES)
+SOURCES = $(libbeagleboneio_la_SOURCES) $(analogRead_SOURCES) \
+	$(digitalWrite_SOURCES) $(pinMux_SOURCES) $(pwm_clock_SOURCES)
+DIST_SOURCES = $(libbeagleboneio_la_SOURCES) $(analogRead_SOURCES) \
+	$(digitalWrite_SOURCES) $(pinMux_SOURCES) $(pwm_clock_SOURCES)
 HEADERS = $(include_HEADERS)
 ETAGS = etags
 CTAGS = ctags
@@ -246,22 +234,14 @@ top_srcdir = @top_srcdir@
 CLEANFILES = *~
 digitalWrite_SOURCES = digitalWrite.c util.c beagleutil.h
 digitalWrite_LDADD = libbeagleboneio.la
-digitalRead_SOURCES = digitalRead.c util.c beagleutil.h
-digitalRead_LDADD = libbeagleboneio.la
-pwm_SOURCES = pwm.c util.c beagleutil.h
-pwm_LDADD = libbeagleboneio.la
-pwmNS_SOURCES = pwmNS.c util.c beagleutil.h
-pwmNS_LDADD = libbeagleboneio.la
 analogRead_SOURCES = analogRead.c util.c beagleutil.h
 analogRead_LDADD = libbeagleboneio.la
-analogWrite_SOURCES = analogWrite.c util.c beagleutil.h
-analogWrite_LDADD = libbeagleboneio.la
 pinMux_SOURCES = pinMux.c util.c beagleutil.h
 pinMux_LDADD = libbeagleboneio.la
 pwm_clock_SOURCES = pwm_clock.c
 lib_LTLIBRARIES = libbeagleboneio.la
-libbeagleboneio_la_SOURCES = beaglebone.c gpio.c beaglepins.c beagledelay.c beagleuart.c beaglepwm.c
-include_HEADERS = beaglebone.h beaglepins.h beaglegpio.h beagledelay.h beagleuart.h beaglepwm.h
+libbeagleboneio_la_SOURCES = beaglebone.c gpio.c pair.c  beaglepins.c beagledelay.c beagleuart.c beaglepwm.c
+include_HEADERS = beaglebone.h beaglepins.h beaglegpio.h beaglepair.h beagledelay.h beagleuart.h beaglepwm.h
 all: all-am
 
 .SUFFIXES:
@@ -372,24 +352,12 @@ clean-binPROGRAMS:
 	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
 	echo " rm -f" $$list; \
 	rm -f $$list
-pwmNS$(EXEEXT): $(pwmNS_OBJECTS) $(pwmNS_DEPENDENCIES) $(EXTRA_pwmNS_DEPENDENCIES) 
-	@rm -f pwmNS$(EXEEXT)
-	$(LINK) $(pwmNS_OBJECTS) $(pwmNS_LDADD) $(LIBS)
-pwm$(EXEEXT): $(pwm_OBJECTS) $(pwm_DEPENDENCIES) $(EXTRA_pwm_DEPENDENCIES) 
-	@rm -f pwm$(EXEEXT)
-	$(LINK) $(pwm_OBJECTS) $(pwm_LDADD) $(LIBS)
-analogWrite$(EXEEXT): $(analogWrite_OBJECTS) $(analogWrite_DEPENDENCIES) $(EXTRA_analogWrite_DEPENDENCIES) 
-	@rm -f analogWrite$(EXEEXT)
-	$(LINK) $(analogWrite_OBJECTS) $(analogWrite_LDADD) $(LIBS)
-analogRead$(EXEEXT): $(analogRead_OBJECTS) $(analogRead_DEPENDENCIES) $(EXTRA_analogRead_DEPENDENCIES) 
+analogRead$(EXEEXT): $(analogRead_OBJECTS) $(analogRead_DEPENDENCIES) 
 	@rm -f analogRead$(EXEEXT)
 	$(LINK) $(analogRead_OBJECTS) $(analogRead_LDADD) $(LIBS)
-digitalWrite$(EXEEXT): $(digitalWrite_OBJECTS) $(digitalWrite_DEPENDENCIES) $(EXTRA_digitalWrite_DEPENDENCIES) 
+digitalWrite$(EXEEXT): $(digitalWrite_OBJECTS) $(digitalWrite_DEPENDENCIES) 
 	@rm -f digitalWrite$(EXEEXT)
 	$(LINK) $(digitalWrite_OBJECTS) $(digitalWrite_LDADD) $(LIBS)
-digitalRead$(EXEEXT): $(digitalRead_OBJECTS) $(digitalRead_DEPENDENCIES) $(EXTRA_digitalRead_DEPENDENCIES) 
-	@rm -f digitalRead$(EXEEXT)
-	$(LINK) $(digitalRead_OBJECTS) $(digitalRead_LDADD) $(LIBS)
 pinMux$(EXEEXT): $(pinMux_OBJECTS) $(pinMux_DEPENDENCIES) 
 	@rm -f pinMux$(EXEEXT)
 	$(LINK) $(pinMux_OBJECTS) $(pinMux_LDADD) $(LIBS)
@@ -411,6 +379,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/beagleuart.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/digitalWrite.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gpio.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pair.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pinMux.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pwm_clock.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/util.Po@am__quote@

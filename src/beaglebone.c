@@ -5,6 +5,7 @@
 #include <assert.h>
 
 void pinMode(unsigned pin, unsigned int value) {
+
   if (value == INPUT) {
  //   // mux mode 0x27
  //   gpio_mux(&pin,  (_MUX_0 | _MUX_1 | _MUX_2 | _MUX_RECEIVER_ENABLE));
@@ -21,12 +22,13 @@ void pinMode(unsigned pin, unsigned int value) {
 }
 
 void digitalWrite(unsigned pin, unsigned int value) {
-  gpio_write_value(pin, value);
-
+//  gpio_write_value(pin, value);
+  digitalWriteFast(pin,value);
 } 
 
 unsigned digitalRead(unsigned pin) {
-  return gpio_read_value(pin) ? 0 : 1;
+//  return gpio_read_value(pin) ? 0 : 1;
+  return digitalReadFast(pin);
 }
 
 unsigned analogRead(unsigned pin) {

@@ -60,6 +60,8 @@ typedef struct {
   unsigned       gpio;
   const char*    mux;
   unsigned       eeprom;
+  unsigned long  address;
+  unsigned       bitmask;
 } PIN;
 
 

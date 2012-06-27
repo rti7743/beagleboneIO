@@ -30,6 +30,7 @@ void display_usage() {
 void doDigitalRead(unsigned pinIndex) {
   unsigned value;
 
+  memmap_ctor();
   pinMode(pinIndex, INPUT);
   value = digitalRead(pinIndex);
 
