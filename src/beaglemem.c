@@ -10,12 +10,19 @@
 #include "beaglemem.h"
 #include "beaglegpio.h"
 
+#define MAX_PWM_PINS 3
+const int PWM_OFFSETS[MAX_PWM_PINS] = {
+  CM_PER_EPWMSS0_CLKCTRL_OFFSET / sizeof (uint32_t),
+  CM_PER_EPWMSS1_CLKCTRL_OFFSET / sizeof (uint32_t),
+  CM_PER_EPWMSS2_CLKCTRL_OFFSET / sizeof (uint32_t)
+};
 
-unsigned long bankAddr[] = {
-	  GPIO0_MEM,
-	  GPIO1_MEM,
-	  GPIO2_MEM,
-	  GPIO3_MEM
+// I would like to use the memory instead of a file in fact. 
+const char* PWM_DEVICE_LIST[PWM_LIST_MAX] = {
+	 "/sys/class/pwm/ehrpwm.1:1"
+	,"/sys/class/pwm/ehrpwm.1:0"
+	,"/sys/class/pwm/ehrpwm.0:0"
+//	,"/sys/class/pwm/ehrpwm.0:1"
 };
 
 int g_memory_fd = 0;
@@ -74,6 +81,23 @@ unsigned int digitalReadFast(unsigned pin) {
     unsigned long reg = getReg(address);
     return (reg & pins[pin].bitmask)  ? 0 : 1;
 }
+
+
+//PWM INIT
+void pwm_ctor(int pwmNumber) {
+    assert(g_memory != MAP_FAILED);
+    assert(pwmNumber < MAX_PWM_PINS);
+
+    setReg( PWM_OFFSETS[ pwmNumber - 1] ,  PWM_CLOCK_ENABLE);
+}
+void pwm_dtor(int pwmNumber) {
+    assert(g_memory != MAP_FAILED);
+    assert(pwmNumber < MAX_PWM_PINS);
+
+    setReg( PWM_OFFSETS[ pwmNumber - 1] ,  PWM_CLOCK_DISABLE);
+}
+
+
 
 /*
 void pwmEnable() {

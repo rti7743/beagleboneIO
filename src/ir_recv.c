@@ -8,22 +8,6 @@
 #include "beagleutil.h"
 #include "beaglebone.h"
 
-
-unsigned long micros()
-{
-  struct timeval tv;
-  gettimeofday(&tv, NULL);
-//  printf("\n%u %u %u %u ",tv.tv_sec,tv.tv_usec,(tv.tv_sec%1000*1000000),(tv.tv_sec %1000*1000000) + tv.tv_usec);
-
-//  return (tv.tv_sec << 20) + tv.tv_usec;
-  return (tv.tv_sec %1000*1000000) + tv.tv_usec;
-}
-
-void delayMicroseconds(unsigned int microsecond)
-{
-  usleep(microsecond);
-}
-
 int ir_receive(unsigned ir_in,unsigned long* outData,int len,int* outLen)
 {
   unsigned int val = 0;
@@ -101,26 +85,23 @@ int ir_send(unsigned ir_out,unsigned long* data,int len)
   }
   digitalWrite(ir_out,0);
   puts("start.");
-  pwmNSOut(1,26300,8800);
+//  pwmNSOut(1,25600,8400);  //39khz
+  pwmNSOut(1,26300,8800);  //38khz
+//  pwmNSOut(1,25600,8600);  //39khz
+ // pwmNSOut(1,25000,8400);  //40khz
+ // pwmNSOut(1,24400,8100);  //41khz
+ // pwmNSOut(1,27000,9000);  //37khz
+ // pwmNSOut(1,27800,9300);  //36khz
+ // pwmNSOut(1,28600,9500);  //35khz
+ // pwmNSOut(1,29400,9800);  //34khz
+ // pwmNSOut(1,30300,10100); //33khz
+ // pwmNSOut(1,31300,10400); //32khz
+ // pwmNSOut(1,32300,10800); //31khz
 
   for (cnt = 0; cnt < len; cnt++) 
   {
     digitalWrite(ir_out,1-(cnt&1));
     usleep(data[cnt] );
-/*
-      if (cnt & 0x1) {
-         digitalWrite(ir_out,0);
-         usleep(data[cnt]);
-      } else {
-         unsigned long loopCount  = (data[cnt] / (9+17)) + 1;
-	 for( ; loopCount ; loopCount -- ) {
-            digitalWrite(ir_out,1);
-            usleep(9);
-            digitalWrite(ir_out,0);
-            usleep(17);
-	 }
-      }
-*/
   }
   digitalWrite(ir_out,0);
   pwmRun(1,0);
