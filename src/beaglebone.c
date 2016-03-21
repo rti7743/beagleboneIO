@@ -5,12 +5,14 @@
 #include <stdlib.h>
 #include <assert.h>
 
-void pinMode(const PIN pin, unsigned int value) {
+void pinMode(PIN pin, unsigned int value) {
   unsigned gpio;
   const Pair* pair;
 
   pair  = get_pair_with_key(pin.def, pin.no, "gpio");
   gpio = atoi(pair->value);
+  
+  //printf("pinMode GPIO:%d as %s\n",gpio, (INPUT) ? "INPUT" : "OUTPUT");
 
   if (value == INPUT) {
     // mux mode 0x27
@@ -55,7 +57,7 @@ unsigned digitalRead(const PIN pin) {
   return value;
 }
 
-#endif // FEATURE_GPIO_MEM
+#endif // NOT FEATURE_GPIO_MEM
 
 unsigned analogRead(const unsigned pin) {
   FILE *f;

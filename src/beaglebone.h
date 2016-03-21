@@ -1,5 +1,5 @@
 
-#define FEATURE_GPIO_MEM 1
+//#define FEATURE_GPIO_MEM 1
 
 /** @file beaglebone
  *  @brief basic procedures the beaglebone/io library
@@ -11,6 +11,15 @@
 
 #include "beaglegpio.h"
 #include "beagledelay.h"
+
+typedef struct {
+	volatile unsigned long* rawAddr;
+	unsigned int bitMask;
+} GPIO;
+
+#ifdef FEATURE_GPIO_MEM
+  extern int setup_gpio_mem_map();
+#endif
 
 /** Least significant byte first
  *
@@ -30,6 +39,7 @@
  *
  */
 extern void pinMode(const PIN pin, unsigned mode);
+extern void pinMode_OUTPUT_raw(const PIN pin, unsigned mode, GPIO* out);
 
 /** write to a pin.
  *
@@ -39,6 +49,21 @@ extern void pinMode(const PIN pin, unsigned mode);
  */
 extern void digitalWrite(const PIN pin, unsigned value);
 
+/** write to a pin a HIGH then LOW value.
+ *
+ * write the values to the specified pin
+ * @param pinNo the gpioNo of the disired pin
+ */
+extern void digitalLatch_raw(GPIO* );
+
+/** write to a pin.
+ *
+ * write the value to the specified pin
+ * @param pinNo the gpioNo of the disired pin
+ * @param value either HIGH or LOW
+ */
+extern void digitalWrite_raw(GPIO* , unsigned value);
+
 /** read from a pin.
  * 
  * read a value from the specific pin
@@ -46,6 +71,7 @@ extern void digitalWrite(const PIN pin, unsigned value);
  * @return the value 
  */
 extern unsigned digitalRead(const PIN);
+extern unsigned digitalRead_raw(GPIO *);
 
 /** read from an analog pin.
  *

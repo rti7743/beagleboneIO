@@ -1,9 +1,10 @@
 /*
-  * function and constants for GPIO via memory mapped i/o
+  * functions and constants for GPIO via memory mapped i/o
   */
 
 #ifndef _GPIO_MEM_H
 
+#include "beaglebone.h"
 #include "beaglegpio.h"
 
 #define MMAP_OFFSET 0x44c00000
@@ -20,7 +21,10 @@
 #define GPIO_CLEARDATAOUT 0x190
 #define GPIO_SETDATAOUT   0x194
 
-extern void digitalWrite_mem(PIN, unsigned int);
+
+extern void digitalWrite(PIN, unsigned int);
+extern void digitalWrite_raw(GPIO*, unsigned int);
+extern void pinMode_raw(const PIN pin, unsigned mode, GPIO* out_pgio);
 extern int setup_gpio_mem_map();
 
 #endif // _GPIO_MEM_H
